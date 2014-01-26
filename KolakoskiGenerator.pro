@@ -14,10 +14,15 @@ TARGET = KolakoskiGenerator
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    binarygenerator.cpp \
+    twolettersgenerator.cpp
 
-HEADERS  += mainwindow.h\
-        generator.h
+HEADERS  += mainwindow.h \
+    generator.h \
+    binarygenerator.h \
+    binarycontainer.h \
+    twolettersgenerator.h
 
 FORMS    += mainwindow.ui
 
