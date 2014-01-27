@@ -14,7 +14,7 @@ BinaryGenerator::~BinaryGenerator()
     delete m_lecture;
 }
 
-void BinaryGenerator::init(std::vector<char> letters)
+void BinaryGenerator::init(std::vector<unsigned char> letters)
 {
     m_lecture->clear();
     m_count[0] = 0;

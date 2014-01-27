@@ -12,7 +12,7 @@ public:
         m_array.push_back(std::bitset<64>(0));
     }
 
-    virtual inline void push(char letter)
+    virtual inline void push(unsigned char letter)
     {
         m_array.back()[m_pos_ecriture] = letter;
         if (++m_pos_ecriture >= 64)
@@ -22,14 +22,14 @@ public:
         }
     }
 
-    virtual inline char first()
+    virtual inline unsigned char first()
     {
         return m_array.front()[m_pos_lecture];
     }
 
-    virtual inline char pop()
+    virtual inline unsigned char pop()
     {
-        char result = m_array.front()[m_pos_lecture];
+        const char result = m_array.front()[m_pos_lecture];
         if (++m_pos_lecture >= 64)
         {
             m_array.pop_front();

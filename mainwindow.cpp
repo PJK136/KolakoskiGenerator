@@ -124,7 +124,7 @@ void MainWindow::toogleGeneration()
         connect(m_generator, &Generator::finishedOutput, this, &MainWindow::updateOutput);
         connect(m_generator, &Generator::progression, this, &MainWindow::updateProgression);
 
-        m_generator->init(std::vector<char>({ui->lettre_1->value(),ui->lettre_2->value()}));
+        m_generator->init(std::vector<unsigned char>({ui->lettre_1->value(),ui->lettre_2->value()}));
         m_generator->setLimitLecture(static_cast<unsigned long long>(ui->limiteLecture->value())*8ull*1024ull*1024ull);
 
         m_ratio.clear();
@@ -210,7 +210,7 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
     QTimer::singleShot(ui->rafraichissement->value(), this, SLOT(triggerUpdateProgression()));
 }
 
-void MainWindow::updateOutput(char *output)
+void MainWindow::updateOutput(unsigned char *output)
 {
     QString sortie = "";
     for (; *output; output++)

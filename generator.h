@@ -8,9 +8,9 @@ class Container
 {
 public:
     virtual ~Container() {}
-    virtual void push(char) = 0;
-    virtual char first() = 0;
-    virtual char pop() = 0;
+    virtual void push(unsigned char) = 0;
+    virtual unsigned char first() = 0;
+    virtual unsigned char pop() = 0;
     virtual void clear() = 0;
     virtual unsigned long long size() = 0;
     virtual unsigned long long approximateSize() = 0;
@@ -23,7 +23,7 @@ class Generator : public QObject
 public:
     explicit Generator(QObject *parent = 0): QObject(parent), m_lecture(0), m_limite_lecture(100), m_ecriture(true), m_status(INTERRUPTED), m_prev(false), m_position(0) { }
 
-    virtual void init(std::vector<char> letters) = 0;
+    virtual void init(std::vector<unsigned char> letters) = 0;
 
     virtual unsigned long long getTailleLecture() { return m_lecture->size(); }
 
@@ -35,7 +35,7 @@ public:
 signals:
     void progression(std::vector<unsigned long long>);
     void finished();
-    void finishedOutput(char*);
+    void finishedOutput(unsigned char*);
 
 public slots:
     virtual inline void stopGeneration()
@@ -97,7 +97,7 @@ protected:
           UPDATING_DATA = 2};
 
     virtual bool nextLettre() = 0;
-    virtual inline void ajouterLettre(char lettre) {
+    virtual inline void ajouterLettre(unsigned char lettre) {
         m_count[lettre]++;
         if (!m_ecriture)
             return;
@@ -107,7 +107,7 @@ protected:
         if (m_lecture->approximateSize() > m_limite_lecture)
             m_ecriture = false;
     }
-    virtual char toOutput(char lecture) = 0;
+    virtual unsigned char toOutput(unsigned char lecture) = 0;
 
     virtual inline void emitProgression()
     {
@@ -120,9 +120,9 @@ protected:
     bool m_ecriture;
     int m_status;
     std::vector<unsigned long long> m_count;
-    char m_prev;
+    unsigned char m_prev;
     unsigned int m_position;
-    char m_output[10000];
+    unsigned char m_output[10000];
 };
 
 #endif // GENERATOR_H

@@ -7,12 +7,12 @@ class TwoLettersGenerator : public BinaryGenerator
 {
     Q_OBJECT
 public:
-    virtual void init(std::vector<char> letters);
+    virtual void init(std::vector<unsigned char> letters);
 
 protected:
     virtual bool nextLettre();
-    virtual inline char toOutput(char lettre) { return m_lettres[lettre ? 1 : 0]; }
-    char m_lettres[2];
+    virtual inline unsigned char toOutput(unsigned char lettre) { return m_lettres[lettre ? 1 : 0]; }
+    unsigned char m_lettres[2];
 };
 
 #endif // TWOLETTERSGENERATOR_H

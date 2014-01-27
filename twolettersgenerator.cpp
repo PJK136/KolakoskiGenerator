@@ -1,7 +1,7 @@
 #include "twolettersgenerator.h"
 #include "binarycontainer.h"
 
-void TwoLettersGenerator::init(std::vector<char> letters)
+void TwoLettersGenerator::init(std::vector<unsigned char> letters)
 {
     m_lecture->clear();
     m_count[0] = 0;
@@ -45,12 +45,12 @@ bool TwoLettersGenerator::nextLettre()
     invert();
     if(!m_lecture->pop())
     {
-        for (char i = 0; i < m_lettres[0]; i++)
+        for (unsigned char i = 0; i < m_lettres[0]; i++)
             ajouterLettre(m_prev);
     }
     else
     {
-        for (char i = 0; i < m_lettres[1]; i++)
+        for (unsigned char i = 0; i < m_lettres[1]; i++)
             ajouterLettre(m_prev);
     }
 

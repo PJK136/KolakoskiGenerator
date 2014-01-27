@@ -22,7 +22,7 @@ public:
 public slots:
     void toogleGeneration();
     void triggerUpdateProgression();
-    void updateOutput(char *output);
+    void updateOutput(unsigned char *output);
     void resetPlots();
 
 signals:
