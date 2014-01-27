@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     return a.exec();
 
     /*BinaryGenerator generator;
-    generator.init(std::vector<char>({1,2}));
+    generator.init(std::vector<unsigned char>({1,2}));
     generator.setLimitLecture(100ull*8ull*1024ull*1024ull);
 
     QTime time;

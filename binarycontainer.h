@@ -29,7 +29,7 @@ public:
 
     virtual inline unsigned char pop()
     {
-        const char result = m_array.front()[m_pos_lecture];
+        register unsigned char result = m_array.front()[m_pos_lecture];
         if (++m_pos_lecture >= 64)
         {
             m_array.pop_front();
