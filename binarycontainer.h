@@ -47,14 +47,14 @@ public:
         m_pos_ecriture = 0;
     }
 
-    inline unsigned long long size()
+    inline std::size_t size()
     {
-        return !isEmpty() ? (m_array.size() - 1ull)*64ull + m_pos_ecriture - m_pos_lecture : 0;
+        return !isEmpty() ? (m_array.size() - 1)*64 + m_pos_ecriture - m_pos_lecture : 0;
     }
 
-    inline unsigned long long approximateSize()
+    inline std::size_t approximateSize()
     {
-        return m_array.size()*64ull;
+        return m_array.size()*64;
     }
 
     inline bool isEmpty()

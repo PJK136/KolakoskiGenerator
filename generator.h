@@ -9,7 +9,7 @@ class Generator : public QObject
     Q_OBJECT
 public:
     virtual void init(std::vector<unsigned char> letters) = 0;
-    virtual unsigned long long getTailleLecture() = 0;
+    virtual std::size_t getTailleLecture() = 0;
     virtual std::vector<unsigned long long> getCounts() = 0;
 
 signals:
@@ -40,7 +40,7 @@ public:
     explicit GeneratorBase(): m_lecture(), m_limite_lecture(100), m_ecriture(true), m_status(INTERRUPTED), m_prev(0), m_position(0) { }
 
 
-    inline unsigned long long getTailleLecture() { return m_lecture.size(); }
+    inline std::size_t getTailleLecture() { return m_lecture.size(); }
 
     inline std::vector<unsigned long long> getCounts()
     {
