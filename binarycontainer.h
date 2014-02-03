@@ -3,16 +3,17 @@
 
 #include <deque>
 #include <bitset>
+#include "container.h"
 
 class BinaryContainer : public Container
 {
 public:
-    BinaryContainer() : Container(), m_pos_lecture(0), m_pos_ecriture(0)
+    BinaryContainer() : m_pos_lecture(0), m_pos_ecriture(0)
     {
         m_array.push_back(std::bitset<64>(0));
     }
 
-    virtual inline void push(unsigned char letter)
+    inline void push(unsigned char letter)
     {
         m_array.back()[m_pos_ecriture] = letter;
         if (++m_pos_ecriture >= 64)
@@ -22,14 +23,14 @@ public:
         }
     }
 
-    virtual inline unsigned char first()
+    inline unsigned char first()
     {
         return m_array.front()[m_pos_lecture];
     }
 
-    virtual inline unsigned char pop()
+    inline unsigned char pop()
     {
-        register unsigned char result = m_array.front()[m_pos_lecture];
+        unsigned char result = m_array.front()[m_pos_lecture];
         if (++m_pos_lecture >= 64)
         {
             m_array.pop_front();
@@ -38,7 +39,7 @@ public:
         return result;
     }
 
-    virtual inline void clear()
+    inline void clear()
     {
         m_array.clear();
         m_array.push_back(std::bitset<64>(0));
@@ -46,17 +47,17 @@ public:
         m_pos_ecriture = 0;
     }
 
-    virtual inline unsigned long long size()
+    inline unsigned long long size()
     {
         return !isEmpty() ? (m_array.size() - 1ull)*64ull + m_pos_ecriture - m_pos_lecture : 0;
     }
 
-    virtual inline unsigned long long approximateSize()
+    inline unsigned long long approximateSize()
     {
         return m_array.size()*64ull;
     }
 
-    virtual inline bool isEmpty()
+    inline bool isEmpty()
     {
         return m_array.size() <= 1 ? (m_array.empty() || m_pos_lecture >= m_pos_ecriture) : false;
     }

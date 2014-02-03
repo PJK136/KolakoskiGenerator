@@ -34,7 +34,6 @@ protected slots:
 
 private:
     Ui::MainWindow *ui;
-    bool m_generation;
     QThread *m_thread;
     Generator *m_generator;
     QVector<double> m_lettres_generees;
@@ -54,6 +53,8 @@ private:
     QwtPlotCurve m_curve_min_affine;
     QwtPlotCurve m_curve_max_affine;
     QTime m_temps;
+    QLocale m_locale;
+    bool m_generation;
 };
 
 #endif // MAINWINDOW_H

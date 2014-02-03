@@ -12,8 +12,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_generation(false),
-    m_generator(0)
+    m_generator(0),
+    m_locale(QLocale::French),
+    m_generation(false)
 {
     ui->setupUi(this);
     qRegisterMetaType<std::vector<unsigned long long>>("std::vector<unsigned long long>");
@@ -124,7 +125,7 @@ void MainWindow::toogleGeneration()
         connect(m_generator, &Generator::finishedOutput, this, &MainWindow::updateOutput);
         connect(m_generator, &Generator::progression, this, &MainWindow::updateProgression);
 
-        m_generator->init(std::vector<unsigned char>({ui->lettre_1->value(),ui->lettre_2->value()}));
+        m_generator->init(std::vector<unsigned char>({static_cast<unsigned char>(ui->lettre_1->value()),static_cast<unsigned char>(ui->lettre_2->value())}));
         m_generator->setLimitLecture(static_cast<unsigned long long>(ui->limiteLecture->value())*8ull*1024ull*1024ull);
 
         m_ratio.clear();
@@ -159,13 +160,15 @@ void MainWindow::toogleGeneration()
 
 void MainWindow::triggerUpdateProgression()
 {
-    m_generator->getProgression();
+    m_generator->askProgression();
 }
 
 void MainWindow::updateProgression(std::vector<unsigned long long> counts)
 {
     if (!m_generation)
         return;
+
+    int elapsed = m_temps.elapsed();
 
     unsigned long long total = 0;
     for (unsigned int i = 0; i < counts.size()-1; i++)
@@ -189,8 +192,8 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
     m_curve_lecture.setSamples(m_lettres_generees, m_ratio_lecture);
     m_curve_difference.setSamples(m_lettres_generees, m_difference);
 
-    /*m_curve_fonction.setSamples(m_counts);
-    m_curve_theory.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()), QPointF(counts[0], counts[0])});
+    m_curve_fonction.setSamples(m_counts);
+    /*m_curve_theory.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()), QPointF(counts[0], counts[0])});
     m_curve_min_lineaire.setSamples({QPointF(0,0), QPointF(counts[0], counts[0]+m_min)});
     m_curve_max_lineaire.setSamples({QPointF(0,0), QPointF(counts[0], counts[0]+m_max)});
     m_curve_min_affine.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()+m_min), QPointF(counts[0], counts[0]+m_min)});
@@ -201,12 +204,19 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
     ui->fonction->replot();
 
     ui->tailleLecture->setValue(m_generator->getTailleLecture()/(1024*1024));
-    int elapsed = m_temps.elapsed()/1000;
+
+    if (elapsed)
+        ui->vitesse->setText(QString("Vitesse : %1 L/s").arg(m_locale.toString(qFloor(((double)total/elapsed)*1000.))));
+    else
+        ui->vitesse->setText("Vitesse : N/A L/s");
+
+    elapsed /= 1000;
     ui->temps->setText(QString("Temps : %1:%2:%3").arg(QString::number(elapsed/3600), 2, QLatin1Char('0'))
                                                   .arg(QString::number((elapsed/60)%60), 2, QLatin1Char('0'))
                                                   .arg(QString::number(elapsed%60), 2, QLatin1Char('0')));
-    if (elapsed)
-        ui->vitesse->setText(QString("Vitesse : %1 L/s").arg(QLocale(QLocale::French).toString(total/elapsed)));
+
+    ui->min->setText(QString("Min : %1").arg(m_locale.toString(m_min)));
+    ui->max->setText(QString("Max : %1").arg(m_locale.toString(m_max)));
     QTimer::singleShot(ui->rafraichissement->value(), this, SLOT(triggerUpdateProgression()));
 }
 

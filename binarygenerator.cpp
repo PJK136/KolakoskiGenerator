@@ -1,22 +1,16 @@
 #include "binarygenerator.h"
 #include "binarycontainer.h"
 
-BinaryGenerator::BinaryGenerator(QObject *parent) :
-    Generator(parent)
+BinaryGenerator::BinaryGenerator() :
+    GeneratorBase()
 {
     m_count.push_back(0);
     m_count.push_back(0);
-    m_lecture = new BinaryContainer();
-}
-
-BinaryGenerator::~BinaryGenerator()
-{
-    delete m_lecture;
 }
 
 void BinaryGenerator::init(std::vector<unsigned char> letters)
 {
-    m_lecture->clear();
+    m_lecture.clear();
     m_count[0] = 0;
     m_count[1] = 0;
     m_ecriture = true;
@@ -45,7 +39,7 @@ void BinaryGenerator::init(std::vector<unsigned char> letters)
 bool BinaryGenerator::nextLettre()
 {
     invert();
-    if(!m_lecture->pop())
+    if(!m_lecture.pop())
     {
         ajouterLettre(m_prev);
     }
@@ -55,5 +49,5 @@ bool BinaryGenerator::nextLettre()
         ajouterLettre(m_prev);
     }
 
-    return !m_lecture->isEmpty();
+    return !m_lecture.isEmpty();
 }

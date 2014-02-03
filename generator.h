@@ -4,33 +4,13 @@
 #include <QObject>
 #include <vector>
 
-class Container
-{
-public:
-    virtual ~Container() {}
-    virtual void push(unsigned char) = 0;
-    virtual unsigned char first() = 0;
-    virtual unsigned char pop() = 0;
-    virtual void clear() = 0;
-    virtual unsigned long long size() = 0;
-    virtual unsigned long long approximateSize() = 0;
-    virtual bool isEmpty() = 0;
-};
-
 class Generator : public QObject
 {
     Q_OBJECT
 public:
-    explicit Generator(QObject *parent = 0): QObject(parent), m_lecture(0), m_limite_lecture(100), m_ecriture(true), m_status(INTERRUPTED), m_prev(false), m_position(0) { }
-
     virtual void init(std::vector<unsigned char> letters) = 0;
-
-    virtual unsigned long long getTailleLecture() { return m_lecture->size(); }
-
-    inline std::vector<unsigned long long> getCounts()
-    {
-        return m_count;
-    }
+    virtual unsigned long long getTailleLecture() = 0;
+    virtual std::vector<unsigned long long> getCounts() = 0;
 
 signals:
     void progression(std::vector<unsigned long long>);
@@ -38,40 +18,44 @@ signals:
     void finishedOutput(unsigned char*);
 
 public slots:
-    virtual inline void stopGeneration()
+    virtual void startGeneration() = 0;
+    virtual void stopGeneration() = 0;
+    virtual std::vector<unsigned long long> getProgression() = 0;
+    virtual void askProgression() = 0;
+    virtual void setLimitLecture(unsigned long long limit) = 0;
+
+protected:
+    enum {INTERRUPTED = 0,
+          GENERATING = 1,
+          UPDATING_DATA = 2};
+
+    virtual bool nextLettre() = 0;
+    virtual unsigned char toOutput(unsigned char lecture) = 0;
+};
+
+template <class Container>
+class GeneratorBase : public Generator
+{
+public:
+    explicit GeneratorBase(): m_lecture(), m_limite_lecture(100), m_ecriture(true), m_status(INTERRUPTED), m_prev(0), m_position(0) { }
+
+
+    inline unsigned long long getTailleLecture() { return m_lecture.size(); }
+
+    inline std::vector<unsigned long long> getCounts()
     {
-        m_status = INTERRUPTED;
+        return m_count;
     }
 
-    virtual inline std::vector<unsigned long long> getProgression()
-    {
-        if (m_status == GENERATING)
+    inline void startGeneration() {
+        if (!m_lecture.isEmpty())
         {
-            m_status = UPDATING_DATA;
-            return std::vector<unsigned long long>();
-        }
-        else
-        {
-            std::vector<unsigned long long> data(m_count);
-            data.push_back(getTailleLecture());
-            return data;
-        }
-    }
-
-    virtual inline void setLimitLecture(unsigned long long limit)
-    {
-        m_limite_lecture = limit;
-    }
-
-    virtual inline void startGeneration() {
-        if (!m_lecture->isEmpty())
-        {
-            m_output[m_position] = toOutput(m_lecture->first());
+            m_output[m_position] = toOutput(m_lecture.first());
             m_position++;
         }
 
         for (; m_position < 9999 && m_status && nextLettre(); m_position++)
-            m_output[m_position] = toOutput(m_lecture->first());
+            m_output[m_position] = toOutput(m_lecture.first());
         m_output[m_position] = 0;
         m_status = UPDATING_DATA;
         emit finishedOutput(m_output);
@@ -86,36 +70,53 @@ public slots:
             else
                 break;
         }
-        m_lecture->clear();
+        m_lecture.clear();
         m_status = INTERRUPTED;
         emit finished();
     }
 
-protected:
-    enum {INTERRUPTED = 0,
-          GENERATING = 1,
-          UPDATING_DATA = 2};
+    inline void stopGeneration()
+    {
+        m_status = INTERRUPTED;
+    }
 
-    virtual bool nextLettre() = 0;
-    virtual inline void ajouterLettre(unsigned char lettre) {
+    inline std::vector<unsigned long long> getProgression()
+    {
+        std::vector<unsigned long long> data(m_count);
+        data.push_back(getTailleLecture());
+        return data;
+    }
+
+    inline void askProgression()
+    {
+        m_status = UPDATING_DATA;
+    }
+
+    inline void setLimitLecture(unsigned long long limit)
+    {
+        m_limite_lecture = limit;
+    }
+
+protected:
+    inline void ajouterLettre(unsigned char lettre) {
         m_count[lettre]++;
         if (!m_ecriture)
             return;
 
-        m_lecture->push(lettre);
+        m_lecture.push(lettre);
 
-        if (m_lecture->approximateSize() > m_limite_lecture)
+        if (m_lecture.approximateSize() > m_limite_lecture)
             m_ecriture = false;
     }
-    virtual unsigned char toOutput(unsigned char lecture) = 0;
 
-    virtual inline void emitProgression()
+    inline void emitProgression()
     {
-        emit progression(getProgression());
+        std::vector<unsigned long long> progress = getProgression();
         m_status = GENERATING;
+        emit progression(progress);
     }
 
-    Container *m_lecture;
+    Container m_lecture;
     unsigned long long m_limite_lecture;
     bool m_ecriture;
     int m_status;

@@ -3,7 +3,7 @@
 
 void TwoLettersGenerator::init(std::vector<unsigned char> letters)
 {
-    m_lecture->clear();
+    m_lecture.clear();
     m_count[0] = 0;
     m_count[1] = 0;
     m_ecriture = true;
@@ -23,7 +23,7 @@ void TwoLettersGenerator::init(std::vector<unsigned char> letters)
 
     if (m_lettres[0] > 1)
     {
-        for (int i = 1; i < m_lettres[0]; i++)
+        for (unsigned char i = 1; i < m_lettres[0]; i++)
             ajouterLettre(false);
         m_prev = false;
     }
@@ -32,7 +32,8 @@ void TwoLettersGenerator::init(std::vector<unsigned char> letters)
         m_count[1]++;
         m_output[m_position] = letters[1];
         m_position++;
-        for (int i = 1; i < m_lettres[1]; i++)
+
+        for (unsigned char i = 1; i < m_lettres[1]; i++)
             ajouterLettre(true);
         m_prev = true;
     }
@@ -43,7 +44,7 @@ void TwoLettersGenerator::init(std::vector<unsigned char> letters)
 bool TwoLettersGenerator::nextLettre()
 {
     invert();
-    if(!m_lecture->pop())
+    if(!m_lecture.pop())
     {
         for (unsigned char i = 0; i < m_lettres[0]; i++)
             ajouterLettre(m_prev);
@@ -54,5 +55,5 @@ bool TwoLettersGenerator::nextLettre()
             ajouterLettre(m_prev);
     }
 
-    return !m_lecture->isEmpty();
+    return !m_lecture.isEmpty();
 }

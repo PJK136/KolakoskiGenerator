@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>604</width>
-    <height>457</height>
+    <width>715</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,81 +15,6 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="0" colspan="5">
-     <layout class="QFormLayout" name="formLayout">
-      <property name="fieldGrowthPolicy">
-       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-      </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Nombre de lettres :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QSpinBox" name="nombreLettres">
-        <property name="minimum">
-         <number>2</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Lettre 1 :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="lettre_1">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Lettre 2 :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QSpinBox" name="lettre_2">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>2</number>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>Taille max lecture (Mo) :</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QSpinBox" name="limiteLecture">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>2147483647</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="3" column="3" rowspan="5">
      <widget class="QwtPlot" name="progression">
       <property name="sizePolicy">
@@ -100,75 +25,41 @@
       </property>
      </widget>
     </item>
-    <item row="15" column="0" colspan="5">
-     <widget class="QPlainTextEdit" name="sortie">
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="14" column="3" colspan="2">
+    <item row="16" column="3" colspan="2">
      <widget class="QProgressBar" name="tailleLecture">
       <property name="value">
        <number>0</number>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="5">
-     <widget class="QPushButton" name="generer">
-      <property name="text">
-       <string>Générer</string>
+    <item row="3" column="2" rowspan="9">
+     <widget class="Line" name="line">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Progression :</string>
-      </property>
-     </widget>
-    </item>
-    <item row="14" column="0" colspan="2">
+    <item row="16" column="0" colspan="2">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Taille de la lecture :</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="4" rowspan="5">
-     <widget class="QwtPlot" name="difference">
+    <item row="11" column="0">
+     <widget class="QLabel" name="max">
+      <property name="text">
+       <string>Max :</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="3" rowspan="4" colspan="2">
+     <widget class="QwtPlot" name="fonction">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QSpinBox" name="rafraichissement">
-      <property name="minimum">
-       <number>1</number>
-      </property>
-      <property name="maximum">
-       <number>9999</number>
-      </property>
-      <property name="value">
-       <number>100</number>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>ms</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QPushButton" name="reset">
-      <property name="text">
-       <string>Reset</string>
       </property>
      </widget>
     </item>
@@ -186,8 +77,35 @@
       </property>
      </widget>
     </item>
-    <item row="8" column="3" rowspan="2" colspan="2">
-     <widget class="QwtPlot" name="fonction">
+    <item row="5" column="0">
+     <widget class="QPushButton" name="reset">
+      <property name="text">
+       <string>Reset</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="0">
+     <widget class="QSpinBox" name="rafraichissement">
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>9999</number>
+      </property>
+      <property name="value">
+       <number>100</number>
+      </property>
+     </widget>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="min">
+      <property name="text">
+       <string>Min :</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="4" rowspan="5">
+     <widget class="QwtPlot" name="difference">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -196,12 +114,135 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="2" rowspan="7">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="2" column="0" colspan="5">
+     <widget class="QPushButton" name="generer">
+      <property name="text">
+       <string>Générer</string>
       </property>
      </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Progression :</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>ms</string>
+      </property>
+     </widget>
+    </item>
+    <item row="17" column="0" colspan="5">
+     <widget class="QPlainTextEdit" name="sortie">
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0" colspan="5">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Nombre de lettres :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="nombreLettres">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="minimum">
+         <number>2</number>
+        </property>
+        <property name="value">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Lettre 1 :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="lettre_1">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_3">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Lettre 2 :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="lettre_2">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_4">
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Taille max lecture (Mo) :</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="limiteLecture">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100000</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -210,7 +251,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>604</width>
+     <width>715</width>
      <height>22</height>
     </rect>
    </property>
