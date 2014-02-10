@@ -3,11 +3,15 @@
 #include "generator.h"
 #include "binarygenerator.h"
 #include "twolettersgenerator.h"
+#include "multilettersgenerator.h"
 #include <QThread>
 #include <QTimer>
 #include <qwt_plot_curve.h>
 #include <qwt_scale_engine.h>
+#include <qwt_legend.h>
 #include <QVector>
+#include <QRegExp>
+#include <sstream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -17,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     m_generation(false)
 {
     ui->setupUi(this);
+
+    //ui->lettres->setValidator(new QRegExpValidator(QRegExp("[0-9 ]")));
+
     qRegisterMetaType<std::vector<unsigned long long>>("std::vector<unsigned long long>");
     m_thread = new QThread();
     m_thread->start();
@@ -24,36 +31,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->progression->setAxisTitle(QwtPlot::yLeft, "Ratio");
     ui->progression->enableAxis(QwtPlot::yRight);
     ui->progression->setAxisTitle(QwtPlot::yRight, "Ratio taille lecture");
+    ui->progression->insertLegend(new QwtLegend, QwtPlot::BottomLegend);
     ui->difference->setAxisTitle(QwtPlot::xBottom, "Nombre de lettres");
     ui->difference->setAxisTitle(QwtPlot::yLeft, "Différence");
-    ui->fonction->setAxisTitle(QwtPlot::xBottom, "Nombre de lettre 1");
-    ui->fonction->setAxisTitle(QwtPlot::yLeft, "Nombre de lettre 2");
+    ui->difference->insertLegend(new QwtLegend, QwtPlot::BottomLegend);
+    m_curve_lecture.setTitle("Différence lecture-suite");
     m_curve_lecture.setAxes(QwtPlot::xBottom, QwtPlot::yRight);
-
-    m_curve_fonction.setPen(Qt::blue);
-    m_curve_theory.setPen(Qt::green);
-    m_curve_min_lineaire.setPen(Qt::red);
-    m_curve_max_lineaire.setPen(Qt::red);
-    m_curve_min_affine.setPen(Qt::cyan);
-    m_curve_max_affine.setPen(Qt::cyan);
-
     m_curve_lecture.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_difference.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_fonction.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_theory.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_min_lineaire.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_max_lineaire.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_min_affine.setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_curve_max_affine.setRenderHint(QwtPlotItem::RenderAntialiased);
-
     m_curve_lecture.attach(ui->progression);
-    m_curve_difference.attach(ui->difference);
-    m_curve_fonction.attach(ui->fonction);
-    m_curve_theory.attach(ui->fonction);
-    m_curve_min_lineaire.attach(ui->fonction);
-    m_curve_max_lineaire.attach(ui->fonction);
-    m_curve_min_affine.attach(ui->fonction);
-    m_curve_max_affine.attach(ui->fonction);
 }
 
 MainWindow::~MainWindow()
@@ -64,6 +49,8 @@ MainWindow::~MainWindow()
     m_thread->wait(1000);
     for (QwtPlotCurve *item : m_curve_ratio)
         delete item;
+    for (QwtPlotCurve *item : m_curve_difference)
+        delete item;
     delete m_thread;
     if (m_generator)
         delete m_generator;
@@ -72,7 +59,7 @@ MainWindow::~MainWindow()
 
 Qt::GlobalColor getColor(unsigned int nb)
 {
-    switch(nb%7)
+    switch(nb%14)
     {
     case 0:
         return Qt::red;
@@ -93,6 +80,27 @@ Qt::GlobalColor getColor(unsigned int nb)
         return Qt::cyan;
         break;
     case 6:
+        return Qt::gray;
+        break;
+    case 7:
+        return Qt::darkRed;
+        break;
+    case 8:
+        return Qt::darkBlue;
+        break;
+    case 9:
+        return Qt::darkMagenta;
+        break;
+    case 10:
+        return Qt::darkYellow;
+        break;
+    case 11:
+        return Qt::darkCyan;
+        break;
+    case 12:
+        return Qt::darkGray;
+        break;
+    case 13:
         return Qt::black;
         break;
     default:
@@ -109,15 +117,34 @@ void MainWindow::toogleGeneration()
         ui->generer->setText("Arrêter");
 
         ui->tailleLecture->setValue(0);
-        ui->tailleLecture->setMaximum(ui->limiteLecture->value()*8);
 
         if (m_generator)
             delete m_generator;
 
-        if (ui->lettre_1->value() <= 2 && ui->lettre_2->value() <= 2)
-            m_generator = new BinaryGenerator();
+        std::stringstream stream(ui->lettres->text().toStdString());
+        m_lettres.clear();
+        while (stream.good())
+        {
+            unsigned int lettre = 0;
+            stream >> lettre;
+            m_lettres.push_back(lettre);
+        }
+
+        if (m_lettres.size() == 2)
+        {
+            if (m_lettres[0] <= 2 && m_lettres[1] <= 2)
+                m_generator = new BinaryGenerator();
+            else
+                m_generator = new TwoLettersGenerator();
+            m_generator->setLimitLecture(static_cast<unsigned long long>(ui->limiteLecture->value())*8ull*1024ull*1024ull);
+            ui->tailleLecture->setMaximum(ui->limiteLecture->value()*8);
+        }
         else
-            m_generator = new TwoLettersGenerator();
+        {
+            m_generator = new MultiLettersGenerator();
+            m_generator->setLimitLecture(static_cast<unsigned long long>(ui->limiteLecture->value())*1024ull*1024ull);
+            ui->tailleLecture->setMaximum(ui->limiteLecture->value());
+        }
 
         m_generator->moveToThread(m_thread);
         connect(this, SIGNAL(generationAsked()), m_generator, SLOT(startGeneration()));
@@ -125,8 +152,7 @@ void MainWindow::toogleGeneration()
         connect(m_generator, &Generator::finishedOutput, this, &MainWindow::updateOutput);
         connect(m_generator, &Generator::progression, this, &MainWindow::updateProgression);
 
-        m_generator->init(std::vector<unsigned char>({static_cast<unsigned char>(ui->lettre_1->value()),static_cast<unsigned char>(ui->lettre_2->value())}));
-        m_generator->setLimitLecture(static_cast<unsigned long long>(ui->limiteLecture->value())*8ull*1024ull*1024ull);
+        m_generator->init(m_lettres);
 
         m_ratio.clear();
         resetPlots();
@@ -135,17 +161,29 @@ void MainWindow::toogleGeneration()
         for (QwtPlotCurve *item : m_curve_ratio)
             delete item;
 
-        m_curve_ratio.clear();
+        for (QwtPlotCurve *item : m_curve_difference)
+            delete item;
 
-        for (int i = 0; i < ui->nombreLettres->value(); i++)
+        m_curve_ratio.clear();
+        m_curve_difference.clear();
+
+        for (int i = 0; i < m_lettres.size(); i++)
         {
             m_ratio.push_back(QVector<double>());
-            m_curve_ratio.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(i)));
+            m_curve_ratio.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(i+1)));
             m_curve_ratio[i]->setPen(getColor(i));
             m_curve_ratio[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
             m_curve_ratio[i]->attach(ui->progression);
         }
 
+        for (int i = 0; i < m_lettres.size()-1; i++)
+        {
+            m_difference.push_back(QVector<double>());
+            m_curve_difference.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(i+2) + QString(" - ") + QString::number(i+1)));
+            m_curve_difference[i]->setPen(getColor(i+1));
+            m_curve_difference[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
+            m_curve_difference[i]->attach(ui->difference);
+        }
         m_temps.start();
         emit generationAsked();
     }
@@ -174,34 +212,32 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
     for (unsigned int i = 0; i < counts.size()-1; i++)
         total += counts[i];
 
-    m_min = qMin(m_min, static_cast<long long>(counts[1]-counts[0]));
-    m_max = qMax(m_max, static_cast<long long>(counts[1]-counts[0]));
-
     m_lettres_generees.append(total);
 
     for (unsigned int i = 0; i < counts.size()-1; i++)
         m_ratio[i].append((double)counts[i]/total);
 
-    m_ratio_lecture.append((double)counts.back()/total);
-    m_difference.append((double)counts[1]-counts[0]);
+    for (unsigned int i = 0; i < counts.size()-2; i++)
+    {
+        m_difference[i].append((double)counts[i+1]-counts[i]);
+        m_min = qMin(m_min, static_cast<long long>(m_difference[i].last()));
+        m_max = qMax(m_max, static_cast<long long>(m_difference[i].last()));
+    }
+
+    if (counts.back())
+        m_ratio_lecture.append((double)counts.back()/total);
     m_counts.append(QPointF(counts[0], counts[1]));
 
     for (unsigned int i = 0; i < counts.size()-1; i++)
         m_curve_ratio[i]->setSamples(m_lettres_generees, m_ratio[i]);
 
-    m_curve_lecture.setSamples(m_lettres_generees, m_ratio_lecture);
-    m_curve_difference.setSamples(m_lettres_generees, m_difference);
+    for (unsigned int i = 0; i < counts.size()-2; i++)
+        m_curve_difference[i]->setSamples(m_lettres_generees, m_difference[i]);
 
-    m_curve_fonction.setSamples(m_counts);
-    /*m_curve_theory.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()), QPointF(counts[0], counts[0])});
-    m_curve_min_lineaire.setSamples({QPointF(0,0), QPointF(counts[0], counts[0]+m_min)});
-    m_curve_max_lineaire.setSamples({QPointF(0,0), QPointF(counts[0], counts[0]+m_max)});
-    m_curve_min_affine.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()+m_min), QPointF(counts[0], counts[0]+m_min)});
-    m_curve_max_affine.setSamples({QPointF(m_counts.first().x(),m_counts.first().x()+m_max), QPointF(counts[0], counts[0]+m_max)});*/
+    m_curve_lecture.setSamples(m_lettres_generees, m_ratio_lecture);
 
     ui->progression->replot();
     ui->difference->replot();
-    ui->fonction->replot();
 
     ui->tailleLecture->setValue(m_generator->getTailleLecture()/(1024*1024));
 
@@ -218,9 +254,9 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
     ui->min->setText(QString("Min : %1").arg(m_locale.toString(m_min)));
     ui->max->setText(QString("Max : %1").arg(m_locale.toString(m_max)));
 
-    QString ratio = "Ratio : ";
-    for (unsigned int i = 0; i < ui->nombreLettres->value(); i++)
-        ratio += QString::number(m_ratio[i].last(), 'g', 14) + QString(' ');
+    QString ratio = "Ratio :\n";
+    for (unsigned int i = 0; i < counts.size()-1; i++)
+        ratio += QString("L") + QString::number(i+1) + QString(": ") + QString::number(m_ratio[i].last(), 'g', 14) + QString('\n');
     ui->ratio->setText(ratio);
     QTimer::singleShot(ui->rafraichissement->value(), this, SLOT(triggerUpdateProgression()));
 }
@@ -244,7 +280,8 @@ void MainWindow::resetPlots()
     m_lettres_generees.clear();
     for (QVector<double> &item : m_ratio)
         item.clear();
-    m_difference.clear();
+    for (QVector<double> &item : m_difference)
+        item.clear();
     m_ratio_lecture.clear();
     m_counts.clear();
 }

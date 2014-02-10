@@ -64,12 +64,13 @@ public:
         while (nextLettre())
         {
             if (m_status == GENERATING)
+                continue;
+            else if (m_status == UPDATING_DATA)
             {
+                emitProgression();
                 if (m_lecture.size() > m_limite_lecture)
                     m_ecriture = false;
             }
-            else if (m_status == UPDATING_DATA)
-                emitProgression();
             else
                 break;
         }
@@ -86,7 +87,10 @@ public:
     inline std::vector<unsigned long long> getProgression()
     {
         std::vector<unsigned long long> data(m_count);
-        data.push_back(getTailleLecture());
+        if (m_ecriture)
+            data.push_back(getTailleLecture());
+        else
+            data.push_back(0);
         return data;
     }
 

@@ -21,7 +21,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     generator.h \
-    container.h \
     binarygenerator.h \
     binarycontainer.h \
     twolettersgenerator.h \

@@ -3,13 +3,8 @@
 
 #include <deque>
 #include <bitset>
-#include "container.h"
 
-#ifdef INHERIT_CONTAINER
-class BinaryContainer : public Container
-#else
 class BinaryContainer
-#endif
 {
 public:
     BinaryContainer() : m_pos_lecture(0), m_pos_ecriture(0)
