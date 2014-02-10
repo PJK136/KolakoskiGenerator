@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>715</width>
-    <height>530</height>
+    <width>713</width>
+    <height>528</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,8 +15,8 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="3" rowspan="5">
-     <widget class="QwtPlot" name="progression">
+    <item row="3" column="4" rowspan="5">
+     <widget class="QwtPlot" name="difference">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -25,10 +25,31 @@
       </property>
      </widget>
     </item>
-    <item row="16" column="3" colspan="2">
-     <widget class="QProgressBar" name="tailleLecture">
-      <property name="value">
-       <number>0</number>
+    <item row="2" column="0" colspan="5">
+     <widget class="QPushButton" name="generer">
+      <property name="text">
+       <string>Générer</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0" colspan="2">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
+       <string>Progression :</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string>ms</string>
+      </property>
+     </widget>
+    </item>
+    <item row="18" column="0" colspan="5">
+     <widget class="QPlainTextEdit" name="sortie">
+      <property name="readOnly">
+       <bool>true</bool>
       </property>
      </widget>
     </item>
@@ -39,7 +60,7 @@
       </property>
      </widget>
     </item>
-    <item row="16" column="0" colspan="2">
+    <item row="17" column="0" colspan="2">
      <widget class="QLabel" name="label">
       <property name="text">
        <string>Taille de la lecture :</string>
@@ -104,8 +125,8 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="4" rowspan="5">
-     <widget class="QwtPlot" name="difference">
+    <item row="3" column="3" rowspan="5">
+     <widget class="QwtPlot" name="progression">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -114,31 +135,10 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="5">
-     <widget class="QPushButton" name="generer">
-      <property name="text">
-       <string>Générer</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="0" colspan="2">
-     <widget class="QLabel" name="label_7">
-      <property name="text">
-       <string>Progression :</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QLabel" name="label_6">
-      <property name="text">
-       <string>ms</string>
-      </property>
-     </widget>
-    </item>
-    <item row="17" column="0" colspan="5">
-     <widget class="QPlainTextEdit" name="sortie">
-      <property name="readOnly">
-       <bool>true</bool>
+    <item row="17" column="3" colspan="2">
+     <widget class="QProgressBar" name="tailleLecture">
+      <property name="value">
+       <number>0</number>
       </property>
      </widget>
     </item>
@@ -244,6 +244,13 @@
       </item>
      </layout>
     </item>
+    <item row="12" column="0">
+     <widget class="QLabel" name="ratio">
+      <property name="text">
+       <string>Ratio :</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -251,7 +258,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>715</width>
+     <width>713</width>
      <height>22</height>
     </rect>
    </property>

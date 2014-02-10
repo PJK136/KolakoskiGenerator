@@ -5,7 +5,11 @@
 #include <bitset>
 #include "container.h"
 
+#ifdef INHERIT_CONTAINER
 class BinaryContainer : public Container
+#else
+class BinaryContainer
+#endif
 {
 public:
     BinaryContainer() : m_pos_lecture(0), m_pos_ecriture(0)
@@ -23,20 +27,18 @@ public:
         }
     }
 
-    inline unsigned char first()
+    inline unsigned char front()
     {
         return m_array.front()[m_pos_lecture];
     }
 
-    inline unsigned char pop()
+    inline void pop()
     {
-        unsigned char result = m_array.front()[m_pos_lecture];
         if (++m_pos_lecture >= 64)
         {
             m_array.pop_front();
             m_pos_lecture = 0;
         }
-        return result;
     }
 
     inline void clear()
@@ -49,7 +51,7 @@ public:
 
     inline std::size_t size()
     {
-        return !isEmpty() ? (m_array.size() - 1)*64 + m_pos_ecriture - m_pos_lecture : 0;
+        return !empty() ? (m_array.size() - 1)*64 + m_pos_ecriture - m_pos_lecture : 0;
     }
 
     inline std::size_t approximateSize()
@@ -57,9 +59,14 @@ public:
         return m_array.size()*64;
     }
 
-    inline bool isEmpty()
+    inline bool empty()
     {
         return m_array.size() <= 1 ? (m_array.empty() || m_pos_lecture >= m_pos_ecriture) : false;
+    }
+
+    inline bool hasNext()
+    {
+        return m_array.size() > 1 || (!m_array.empty() && m_pos_lecture < m_pos_ecriture);
     }
 
 protected:

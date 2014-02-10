@@ -217,6 +217,11 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
 
     ui->min->setText(QString("Min : %1").arg(m_locale.toString(m_min)));
     ui->max->setText(QString("Max : %1").arg(m_locale.toString(m_max)));
+
+    QString ratio = "Ratio : ";
+    for (unsigned int i = 0; i < ui->nombreLettres->value(); i++)
+        ratio += QString::number(m_ratio[i].last(), 'g', 14) + QString(' ');
+    ui->ratio->setText(ratio);
     QTimer::singleShot(ui->rafraichissement->value(), this, SLOT(triggerUpdateProgression()));
 }
 
@@ -225,7 +230,10 @@ void MainWindow::updateOutput(unsigned char *output)
     QString sortie = "";
     for (; *output; output++)
     {
-        sortie += QString::number(*output);
+        if (*output > 9 && *output < 36)
+            sortie += *output - 10 + 65;
+        else
+            sortie += QString::number(*output);
     }
 
     ui->sortie->setPlainText(sortie);

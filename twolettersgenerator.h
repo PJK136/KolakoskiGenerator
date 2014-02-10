@@ -5,9 +5,8 @@
 
 class TwoLettersGenerator : public BinaryGenerator
 {
-    Q_OBJECT
 public:
-    virtual void init(std::vector<unsigned char> letters);
+    virtual void init(std::vector<unsigned char> lettres);
 
 protected:
     bool nextLettre();

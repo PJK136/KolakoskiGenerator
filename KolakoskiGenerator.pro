@@ -16,14 +16,16 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     binarygenerator.cpp \
-    twolettersgenerator.cpp
+    twolettersgenerator.cpp \
+    multilettersgenerator.cpp
 
 HEADERS  += mainwindow.h \
     generator.h \
     container.h \
     binarygenerator.h \
     binarycontainer.h \
-    twolettersgenerator.h
+    twolettersgenerator.h \
+    multilettersgenerator.h
 
 FORMS    += mainwindow.ui
 

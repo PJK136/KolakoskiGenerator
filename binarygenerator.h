@@ -6,10 +6,9 @@
 
 class BinaryGenerator : public GeneratorBase<BinaryContainer>
 {
-    Q_OBJECT
 public:
     explicit BinaryGenerator();
-    virtual void init(std::vector<unsigned char> letters);
+    virtual void init(std::vector<unsigned char> lettres);
 
 protected:
     virtual bool nextLettre();

@@ -8,20 +8,20 @@ BinaryGenerator::BinaryGenerator() :
     m_count.push_back(0);
 }
 
-void BinaryGenerator::init(std::vector<unsigned char> letters)
+void BinaryGenerator::init(std::vector<unsigned char> lettres)
 {
     m_lecture.clear();
     m_count[0] = 0;
     m_count[1] = 0;
     m_ecriture = true;
-    if (letters.size() < 2 || !letters[0] || !letters[1] || letters[0] == letters[1] || letters[0] > 2 || letters[1] > 2)
+    if (lettres.size() < 2 || !lettres[0] || !lettres[1] || lettres[0] == lettres[1] || lettres[0] > 2 || lettres[1] > 2)
     {
         m_status = INTERRUPTED;
         return;
     }
 
     m_position = 0;
-    if (letters[0] == 1)
+    if (lettres[0] == 1)
     {
         m_count[0]++;
         m_output[0] = 1;
@@ -39,7 +39,7 @@ void BinaryGenerator::init(std::vector<unsigned char> letters)
 bool BinaryGenerator::nextLettre()
 {
     invert();
-    if(!m_lecture.pop())
+    if(!m_lecture.front())
     {
         ajouterLettre(m_prev);
     }
@@ -49,5 +49,6 @@ bool BinaryGenerator::nextLettre()
         ajouterLettre(m_prev);
     }
 
-    return !m_lecture.isEmpty();
+    m_lecture.pop();
+    return m_lecture.hasNext();
 }

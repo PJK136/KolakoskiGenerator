@@ -8,7 +8,7 @@ class Generator : public QObject
 {
     Q_OBJECT
 public:
-    virtual void init(std::vector<unsigned char> letters) = 0;
+    virtual void init(std::vector<unsigned char> lettres) = 0;
     virtual std::size_t getTailleLecture() = 0;
     virtual std::vector<unsigned long long> getCounts() = 0;
 
@@ -48,14 +48,14 @@ public:
     }
 
     inline void startGeneration() {
-        if (!m_lecture.isEmpty())
+        if (!m_lecture.empty())
         {
-            m_output[m_position] = toOutput(m_lecture.first());
+            m_output[m_position] = toOutput(m_lecture.front());
             m_position++;
         }
 
         for (; m_position < 9999 && m_status && nextLettre(); m_position++)
-            m_output[m_position] = toOutput(m_lecture.first());
+            m_output[m_position] = toOutput(m_lecture.front());
         m_output[m_position] = 0;
         m_status = UPDATING_DATA;
         emit finishedOutput(m_output);
@@ -64,13 +64,16 @@ public:
         while (nextLettre())
         {
             if (m_status == GENERATING)
-                continue;
+            {
+                if (m_lecture.size() > m_limite_lecture)
+                    m_ecriture = false;
+            }
             else if (m_status == UPDATING_DATA)
                 emitProgression();
             else
                 break;
         }
-        m_lecture.clear();
+        m_lecture = Container();
         m_status = INTERRUPTED;
         emit finished();
     }
@@ -104,9 +107,6 @@ protected:
             return;
 
         m_lecture.push(lettre);
-
-        if (m_lecture.approximateSize() > m_limite_lecture)
-            m_ecriture = false;
     }
 
     inline void emitProgression()
