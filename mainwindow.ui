@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>713</width>
-    <height>526</height>
+    <width>711</width>
+    <height>524</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -36,13 +36,6 @@
       </property>
      </widget>
     </item>
-    <item row="19" column="0" colspan="5">
-     <widget class="QPlainTextEdit" name="sortie">
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
     <item row="18" column="0" colspan="2">
      <widget class="QLabel" name="label">
       <property name="text">
@@ -55,7 +48,7 @@
       <item>
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Lettres</string>
+         <string>Lettres :</string>
         </property>
        </widget>
       </item>
@@ -188,6 +181,19 @@
       </item>
      </layout>
     </item>
+    <item row="19" column="0" colspan="5">
+     <widget class="QPlainTextEdit" name="sortie">
+      <property name="inputMethodHints">
+       <set>Qt::ImhDigitsOnly</set>
+      </property>
+      <property name="undoRedoEnabled">
+       <bool>false</bool>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -195,7 +201,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>713</width>
+     <width>711</width>
      <height>22</height>
     </rect>
    </property>
@@ -257,8 +263,8 @@
    <slot>toogleGeneration()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>231</x>
-     <y>184</y>
+     <x>237</x>
+     <y>79</y>
     </hint>
     <hint type="destinationlabel">
      <x>611</x>
@@ -273,12 +279,28 @@
    <slot>resetPlots()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>260</y>
+     <x>85</x>
+     <y>156</y>
     </hint>
     <hint type="destinationlabel">
      <x>106</x>
      <y>258</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lettres</sender>
+   <signal>returnPressed()</signal>
+   <receiver>generer</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>202</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>184</x>
+     <y>72</y>
     </hint>
    </hints>
   </connection>

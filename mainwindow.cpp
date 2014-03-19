@@ -12,6 +12,7 @@
 #include <QVector>
 #include <QRegExp>
 #include <sstream>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,7 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //ui->lettres->setValidator(new QRegExpValidator(QRegExp("[0-9 ]")));
+    ui->lettres->setValidator(new QRegExpValidator(QRegExp("[1-9 ]+")));
+    ui->lettres->setText("1 2");
 
     qRegisterMetaType<std::vector<unsigned long long>>("std::vector<unsigned long long>");
     m_thread = new QThread();
@@ -113,6 +115,50 @@ void MainWindow::toogleGeneration()
 {
     if (!m_generation)
     {
+        std::stringstream stream(ui->lettres->text().toStdString());
+        m_lettres.clear();
+        unsigned int lettre = 0;
+        while (stream >> lettre)
+        {
+            if (lettre > 255)
+            {
+                QMessageBox::critical(this, "Lettre trop grande", "Une lettre ne peut pas dépasser 255 ... (Limitation technique)");
+                return;
+            }
+            m_lettres.push_back(lettre);
+        }
+
+        if (m_lettres.empty())
+        {
+            QMessageBox::critical(this, "Pas de lettres ...", "Aucune lettre n'a été saisie pour la génération de la suite !");
+            return;
+        }
+        else if (m_lettres.size() == 1)
+        {
+            QMessageBox::critical(this, "Pas assez de lettres ...", "Il faut au moins deux lettres différentes pour la génération de la suite !");
+            return;
+        }
+        else if (m_lettres.size() > 255)
+        {
+            QMessageBox::critical(this, "Pas assez de lettres ...", "Il faut au moins deux lettres différentes pour la génération de la suite !");
+            return;
+        }
+
+        for (unsigned int i = 0; i < m_lettres.size()-1; i++)
+        {
+            if (m_lettres[i] == m_lettres[i+1])
+            {
+                QMessageBox::critical(this, "Lettres identiques ...", "Il y a deux fois la même lettre à la suite dans la saisie !");
+                return;
+            }
+        }
+
+        if (m_lettres.front() == m_lettres.back())
+        {
+            QMessageBox::critical(this, "Lettres identiques ...", "La première lettre ne peut pas être identique à la dernière !");
+            return;
+        }
+
         m_generation = true;
         ui->generer->setText("Arrêter");
 
@@ -120,15 +166,6 @@ void MainWindow::toogleGeneration()
 
         if (m_generator)
             delete m_generator;
-
-        std::stringstream stream(ui->lettres->text().toStdString());
-        m_lettres.clear();
-        while (stream.good())
-        {
-            unsigned int lettre = 0;
-            stream >> lettre;
-            m_lettres.push_back(lettre);
-        }
 
         if (m_lettres.size() == 2)
         {
@@ -167,19 +204,19 @@ void MainWindow::toogleGeneration()
         m_curve_ratio.clear();
         m_curve_difference.clear();
 
-        for (int i = 0; i < m_lettres.size(); i++)
+        for (unsigned int i = 0; i < m_lettres.size(); i++)
         {
             m_ratio.push_back(QVector<double>());
-            m_curve_ratio.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(i+1)));
+            m_curve_ratio.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(m_lettres[i])));
             m_curve_ratio[i]->setPen(getColor(i));
             m_curve_ratio[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
             m_curve_ratio[i]->attach(ui->progression);
         }
 
-        for (int i = 0; i < m_lettres.size()-1; i++)
+        for (unsigned int i = 0; i < m_lettres.size()-1; i++)
         {
             m_difference.push_back(QVector<double>());
-            m_curve_difference.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(i+2) + QString(" - ") + QString::number(i+1)));
+            m_curve_difference.push_back(new QwtPlotCurve(QString("Lettre ") + QString::number(m_lettres[i+1]) + QString(" - ") + QString::number(m_lettres[i])));
             m_curve_difference[i]->setPen(getColor(i+1));
             m_curve_difference[i]->setRenderHint(QwtPlotItem::RenderAntialiased);
             m_curve_difference[i]->attach(ui->difference);
@@ -256,7 +293,7 @@ void MainWindow::updateProgression(std::vector<unsigned long long> counts)
 
     QString ratio = "Ratio :\n";
     for (unsigned int i = 0; i < counts.size()-1; i++)
-        ratio += QString("L") + QString::number(i+1) + QString(": ") + QString::number(m_ratio[i].last(), 'g', 14) + QString('\n');
+        ratio += QString("L") + QString::number(m_lettres[i]) + QString(": ") + QString::number(m_ratio[i].last(), 'f', 14) + QString('\n');
     ui->ratio->setText(ratio);
     QTimer::singleShot(ui->rafraichissement->value(), this, SLOT(triggerUpdateProgression()));
 }

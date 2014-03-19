@@ -14,7 +14,7 @@ void MultiLettersGenerator::init(std::vector<unsigned char> lettres)
 
     m_lettres = lettres;
 
-    for (int i = 0; i < m_lettres.size(); i++)
+    for (unsigned int i = 0; i < m_lettres.size(); i++)
     {
         m_count[i] = 0;
         if (m_lettres[i] == 0)
