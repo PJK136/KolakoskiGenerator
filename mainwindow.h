@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "generator.h"
 #include <QMainWindow>
 #include <QThread>
-#include <qwt_plot_curve.h>
-#include "generator.h"
 #include <QTime>
+#include <qwt_plot_curve.h>
 
 namespace Ui {
 class MainWindow;

@@ -27,8 +27,3 @@ HEADERS  += mainwindow.h \
     multilettersgenerator.h
 
 FORMS    += mainwindow.ui
-
-INCLUDEPATH += /usr/local/qwt-6.1.0/include
-LIBS += -L/usr/local/qwt-6.1.0/lib -lqwt
-
-QMAKE_CXXFLAGS += -Wall -Wextra -std=c++11

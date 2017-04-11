@@ -6,13 +6,13 @@
 #include "multilettersgenerator.h"
 #include <QThread>
 #include <QTimer>
+#include <QVector>
+#include <QRegExp>
+#include <QMessageBox>
 #include <qwt_plot_curve.h>
 #include <qwt_scale_engine.h>
 #include <qwt_legend.h>
-#include <QVector>
-#include <QRegExp>
 #include <sstream>
-#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
