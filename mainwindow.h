@@ -24,6 +24,7 @@ public slots:
     void triggerUpdateProgression();
     void updateOutput(unsigned char *output);
     void resetPlots();
+    void about();
 
 signals:
     void generationAsked();

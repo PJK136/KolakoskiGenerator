@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>711</width>
-    <height>524</height>
+    <height>627</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -202,12 +202,12 @@
      <x>0</x>
      <y>0</y>
      <width>711</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
     <property name="title">
-     <string>Menu</string>
+     <string>&amp;Menu</string>
     </property>
     <addaction name="actionQuitter"/>
    </widget>
@@ -215,6 +215,7 @@
     <property name="title">
      <string>?</string>
     </property>
+    <addaction name="action_propos"/>
    </widget>
    <addaction name="menuMenu"/>
    <addaction name="menu"/>
@@ -222,10 +223,15 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionQuitter">
    <property name="text">
-    <string>Quitter</string>
+    <string>&amp;Quitter</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="action_propos">
+   <property name="text">
+    <string>À propos...</string>
    </property>
   </action>
  </widget>
@@ -234,7 +240,7 @@
   <customwidget>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
-   <header location="global">qwt_plot.h</header>
+   <header>qwt_plot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
@@ -304,9 +310,26 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>action_propos</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>about()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>355</x>
+     <y>313</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>toogleGeneration()</slot>
   <slot>resetPlots()</slot>
+  <slot>about()</slot>
  </slots>
 </ui>

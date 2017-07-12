@@ -331,3 +331,9 @@ void MainWindow::reset()
     ui->tailleLecture->setValue(0);
     resetPlots();
 }
+
+void MainWindow::about()
+{
+    QMessageBox::about(this, "À propos de Kolakoski Generator", "<strong>Kolakoski Generator</strong><br/>Générateur de suites de Kolakoski (et variantes).<br/>Copyright © 2014 Paul DU");
+}
+
